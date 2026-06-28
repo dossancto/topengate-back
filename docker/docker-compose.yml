@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=wellkept-db
+    volumes:
+      - local_wellkept_pgdata:/var/lib/postgresql/data
+
+    networks:
+      - db_network
+
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+    environment:
+      Dashboard__Frontend__AuthMode: Unsecured
+    ports:
+      - 4318:18889
+      - 18888:18888
+    networks:
+      - db_network
+
+volumes:
+  local_wellkept_pgdata:
+
+networks:
+  db_network:

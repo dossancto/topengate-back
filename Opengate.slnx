@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Opengate/Opengate.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/Opengate.Tests.Integration/">
+    <Project Path="tests/Opengate.Tests.Integration/Opengate.Tests.Integration.csproj" />
+  </Folder>
+  <Folder Name="/tests/Opengate.Tests.Shared/">
+    <Project Path="tests/Opengate.Tests.Shared/Opengate.Tests.Shared.csproj" />
+  </Folder>
+  <Folder Name="/tests/Opengate.Tests.Unit/">
+    <Project Path="tests/Opengate.Tests.Unit/Opengate.Tests.Unit.csproj" />
+  </Folder>
+</Solution>
