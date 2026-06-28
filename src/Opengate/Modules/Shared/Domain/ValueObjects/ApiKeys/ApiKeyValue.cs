@@ -28,12 +28,13 @@ public readonly struct ApiKeyValue
 
     public override string ToString()
     {
-        var key = $"{prefix}_{content}";
+        var key = GetPlainText();
         var hashedKey = HashKey(key);
         return hashedKey;
     }
 
-    private static string HashKey(string input)
+    // TODO: Check this algorithm, maybe we can use a more secure one
+    public static string HashKey(string input)
     {
         byte[] inputBytes = System.Text.Encoding.UTF8.GetBytes(input);
 
