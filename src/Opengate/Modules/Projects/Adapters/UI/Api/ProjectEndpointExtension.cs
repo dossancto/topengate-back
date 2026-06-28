@@ -101,12 +101,11 @@ public static class ProjectEndpointExtension
             var projects = await db.Projects
             .Where(p => p.DeletedAt == 0)
             .Where(p => p.CreatorOrganizationId == user.OrganizationId)
-            .Select(p => new GetProjectByIdResponse
+            .Select(p => new ListProjectsResponse
             {
                 Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
-                ApiKey = p.ApiKey,
                 CreatedAt = p.CreatedAt,
                 UpdatedAt = p.UpdatedAt
             })
