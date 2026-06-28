@@ -47,17 +47,6 @@ namespace Opengate.Migrations
                            keyValue: "ca2d1747-2fb4-470b-b072-dedefa06832f"
                        );
 
-            migrationBuilder.DeleteData(
-                           table: "AspNetUserRoles",
-                           keyColumns: ["UserId", "RoleId"],
-                           keyValues: ["ca2d1747-2fb4-470b-b072-dedefa06832f", "8a1c4f2b-5a26-4a2b-9d77-0d6d1bb6c0a1"]
-                       );
-
-            migrationBuilder.DeleteData(
-                           table: "AspNetRoles",
-                           keyColumn: "Id",
-                           keyValue: "8a1c4f2b-5a26-4a2b-9d77-0d6d1bb6c0a1"
-                       );
         }
     }
 }
