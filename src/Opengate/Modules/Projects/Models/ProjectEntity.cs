@@ -1,3 +1,5 @@
+using Opengate.Modules.Shared.Domain.ValueObjects.ApiKeys;
+
 namespace Opengate.Modules.Projects.Models;
 
 public class ProjectEntity
@@ -20,32 +22,41 @@ public class ProjectEntity
 
     public long DeletedAt { get; set; }
 
-    public static ProjectEntity Create(
+    public static (ApiKeyValue ApiKey, ProjectEntity Project) Create(
         string name,
         string? description,
         Guid creatorUserId,
         Guid creatorOrganizationId)
-        => new()
+    {
+        var apiKey = GenerateApiKey();
+
+        var project = new ProjectEntity()
         {
             Id = Guid.NewGuid(),
             Name = name,
             Description = description,
             CreatorUserId = creatorUserId,
             CreatorOrganizationId = creatorOrganizationId,
-            ApiKey = GenerateApiKey(),
+            ApiKey = apiKey.ToString(),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             DeletedAt = 0
         };
 
-    private static string GenerateApiKey()
-    {
-        // TODO: Generate the api key the right way, maybe using a secure random generator or a hashing algorithm
-        return Guid.NewGuid().ToString();
+        return (apiKey, project);
     }
 
-    public void RegenApiKey()
+    private static ApiKeyValue GenerateApiKey()
     {
-        ApiKey = GenerateApiKey();
+        return ApiKeyValue.Generate("sk_opengate");
+    }
+
+    public ApiKeyValue RegenApiKey()
+    {
+        var apiKey = GenerateApiKey();
+
+        ApiKey = apiKey.ToString();
+
+        return apiKey;
     }
 }

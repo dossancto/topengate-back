@@ -31,7 +31,7 @@ public static class ProjectEndpointExtension
             var user = context.GetRequiredUserInfo();
 
             // TODO: Encrypt the API key before storing it in the database
-            var project = ProjectEntity.Create(
+            var (apikey, project) = ProjectEntity.Create(
                 name: request.Name,
                 description: request.Description,
                 creatorUserId: user.Id,
@@ -44,9 +44,10 @@ public static class ProjectEndpointExtension
             return TypedResults.Created(
                 $"/projects/{project.Id}",
                 new CreateProjectResponse(
-                    project.Id,
-                    project.ApiKey
-            ));
+                        Id: project.Id,
+                        ApiKey: apikey.GetPlainText()
+                    )
+            );
         });
 
         g.MapGet("/{projectId:Guid}", async (
@@ -134,11 +135,14 @@ public static class ProjectEndpointExtension
                 return Results.NotFound();
             }
 
-            project.RegenApiKey();
+            var apiKey = project.RegenApiKey();
 
             await db.SaveChangesAsync(cancellationToken);
 
-            return Results.NoContent();
+            return Results.Ok(new
+            {
+                ApiKey = apiKey.GetPlainText()
+            });
         });
 
         return app;
