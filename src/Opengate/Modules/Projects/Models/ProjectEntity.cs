@@ -32,9 +32,20 @@ public class ProjectEntity
             Description = description,
             CreatorUserId = creatorUserId,
             CreatorOrganizationId = creatorOrganizationId,
-            ApiKey = Guid.NewGuid().ToString(),
+            ApiKey = GenerateApiKey(),
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow,
             DeletedAt = 0
         };
+
+    private static string GenerateApiKey()
+    {
+        // TODO: Generate the api key the right way, maybe using a secure random generator or a hashing algorithm
+        return Guid.NewGuid().ToString();
+    }
+
+    public void RegenApiKey()
+    {
+        ApiKey = GenerateApiKey();
+    }
 }
