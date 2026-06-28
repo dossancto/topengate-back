@@ -80,13 +80,6 @@ public static class OrganizationsEndpointExtension
             .WithDescription("Use this endpoint to cancel an organization invite using the invite ID.")
             ;
 
-        var usersG = g.MapGroup("{organizationId:guid}/users/{userId:guid}");
-
-        usersG.MapPatch("/role", OrganizationEndpointAdapter.UpdateUserRoleInOrganization)
-            .WithSummary("Update user role in organization")
-            .WithName("Update user role in organization")
-            ;
-
         return app;
     }
 }

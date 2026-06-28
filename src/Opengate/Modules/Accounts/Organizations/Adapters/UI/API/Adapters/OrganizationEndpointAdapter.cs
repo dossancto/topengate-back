@@ -400,47 +400,4 @@ public static class OrganizationEndpointAdapter
 
         return TypedResults.NoContent();
     }
-
-
-    /// <summary>
-    /// Updates the user role in an organization.
-    /// </summary>
-    /// <param name="context">The current HTTP context containing user claims.</param>
-    /// <param name="request"> The request containing the user role to update.</param>
-    /// <param name="userManager">The user manager service for accessing user information.</param>
-    /// <returns>Task representing the asynchronous operation.</returns>
-    ///
-    public static async Task<Results<NoContent, NotFound, ProblemHttpResult>> UpdateUserRoleInOrganization(
-        HttpContext context,
-        [FromBody] UpdateUserRoleInOrganizationRequest request,
-        [FromServices] UserManager<ApplicationUser> userManager
-        )
-    {
-        var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            ?? context.User.FindFirst("nameid")?.Value;
-
-        var user = await userManager.FindByIdAsync(userId!);
-
-        if (user is null)
-        {
-            return TypedResults.NotFound();
-        }
-
-        if (user.OrganizationId is null)
-        {
-            return TypedResults.Problem(detail: "User does not belong to an organization.", statusCode: StatusCodes.Status401Unauthorized);
-        }
-
-        var roles = await userManager.GetRolesAsync(user);
-
-        if (roles.Contains(request.Role.ToString()) == true)
-        {
-            return TypedResults.Problem(detail: "User already has this role.", statusCode: StatusCodes.Status400BadRequest);
-        }
-
-        await userManager.RemoveFromRolesAsync(user, roles);
-        await userManager.AddToRoleAsync(user, request.Role.ToString());
-
-        return TypedResults.NoContent();
-    }
 }
