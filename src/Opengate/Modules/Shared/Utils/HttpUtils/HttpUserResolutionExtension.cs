@@ -27,8 +27,6 @@ public static class HttpUserResolutionExtension
 
         var organizationId = context.User.FindFirst("organization_id")?.Value;
 
-        var shopId = context.User.FindFirst("shop_id")?.Value;
-
         if (string.IsNullOrWhiteSpace(organizationId))
         {
             return null;
@@ -39,7 +37,6 @@ public static class HttpUserResolutionExtension
             Id = userId,
             Email = Email.Parse(userEmail ?? string.Empty),
             OrganizationId = Guid.Parse(organizationId),
-            ShopId = shopId is null ? null : Guid.Parse(shopId)
         };
     }
 
@@ -54,29 +51,6 @@ public static class HttpUserResolutionExtension
 
         return userInfo;
     }
-
-    public static UserInfosWithShopFromToken GetRequiredUserInfoWithShop(this HttpContext context)
-    {
-        var userInfo = context.GetUserInfo();
-
-        if (userInfo is null)
-        {
-            throw new HttpUserResolutionException(HttpUserResolutionError.UserNotFound);
-        }
-
-        // if (userInfo.ShopId is null)
-        // {
-        //     throw new HttpUserResolutionException(HttpUserResolutionError.ShopNotFound);
-        // }
-
-        return new()
-        {
-            Id = userInfo.Id,
-            Email = userInfo.Email,
-            OrganizationId = userInfo.OrganizationId,
-            ShopId = Guid.Parse("b8772276-7b3d-4193-ba0a-a676d196f77c") // TODO : FIX!
-        };
-    }
 }
 
 public class UserInfosFromToken()
@@ -84,10 +58,4 @@ public class UserInfosFromToken()
     public Guid Id { get; set; }
     public Email Email { get; set; }
     public Guid OrganizationId { get; set; }
-    public Guid? ShopId { get; set; }
-};
-
-public class UserInfosWithShopFromToken() : UserInfosFromToken
-{
-    public new Guid ShopId { get; set; }
 };

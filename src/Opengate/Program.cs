@@ -10,6 +10,7 @@ using Opengate.Modules.Accounts.Users.Domain.Enum;
 using Opengate.Modules.Shared;
 using Opengate.Modules.Shared.Adapters.Databases;
 using Opengate.Modules.Test;
+using Opengate.Modules.Projects;
 
 Env.TraversePath().Load();
 
@@ -29,6 +30,7 @@ builder.Services
     .AddSharedModule()
     .AddAccountsModule()
     .AddTestModule()
+    .AddProjectsModule()
     ;
 
 //Policies
@@ -65,6 +67,7 @@ app
     .UseSharedModule()
     .UseAccountsModule()
     .UseTestModule()
+    .UseProjectsModule()
     ;
 
 app.Run();

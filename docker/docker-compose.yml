@@ -7,9 +7,9 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=wellkept-db
+      - POSTGRES_DB=opengate-db
     volumes:
-      - local_wellkept_pgdata:/var/lib/postgresql/data
+      - local_opengate_pgdata:/var/lib/postgresql/data
 
     networks:
       - db_network
@@ -25,7 +25,7 @@ services:
       - db_network
 
 volumes:
-  local_wellkept_pgdata:
+  local_opengate_pgdata:
 
 networks:
   db_network:
