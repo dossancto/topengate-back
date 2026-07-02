@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 
+using Opengate.Modules.Accounts.Organizations.Application.InitOrganization;
 using Opengate.Modules.Accounts.Users.Adapters.Endpoints.Dtos;
 using Opengate.Modules.Accounts.Users.Domain.Enum;
 using Opengate.Modules.Accounts.Users.Domain.Ports.AuthenticationTokenGerators;
@@ -55,7 +56,9 @@ public static class IdentityEndpointExtensions
             (
             [FromBody] RegisterUserRequest registration,
             HttpContext context,
-            [FromServices] IServiceProvider sp) =>
+            [FromServices] IServiceProvider sp,
+            [FromServices] InitOrganizationWorkflow initOrganizationWorkflwow
+            ) =>
         {
             var emailSender = sp.GetRequiredService<IEmailSender<ApplicationUser>>();
 
@@ -75,10 +78,24 @@ public static class IdentityEndpointExtensions
                 return CreateValidationProblem(IdentityResult.Failed(userManager.ErrorDescriber.InvalidEmail(email)));
             }
 
+            var createOrganization = new InitOrganizationInput(
+                    registration.FirstName,
+                    "",
+                    registration.Email,
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+            );
+
+            var createdOrganization = (await initOrganizationWorkflwow.Execute(createOrganization).Run()).ThrowIfFail();
+
             var user = new ApplicationUser()
             {
                 FirstName = registration.FirstName,
                 LastName = registration.LastName,
+                OrganizationId = createdOrganization.Id.ToString()
             };
 
             await userStore.SetUserNameAsync(user, email, CancellationToken.None);
